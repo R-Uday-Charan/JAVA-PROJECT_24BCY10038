@@ -1,4 +1,8 @@
 Campus Course & Records Manager (CCRM)
+
+**Author:** R UDAY CHARAN
+**Registration Number:** 24BCY10038
+
 CCRM is a simple Java application for managing campus courses and student records. The project is designed to be lightweight and easy to run using the standard Java Development Kit without any external libraries.
 
 Requirements
