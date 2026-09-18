@@ -1,123 +1,155 @@
 Campus Course & Records Manager (CCRM)
 
-**Author:** R UDAY CHARAN
+**Author:** R UDAY CHARAN  
 **Registration Number:** 24BCY10038
 
-CCRM is a simple Java application for managing campus courses and student records. The project is designed to be lightweight and easy to run using the standard Java Development Kit without any external libraries.
+CCRM is a lightweight Java application for managing student records and course data at a campus level. The whole idea was to keep it simple — no external libraries, no database setup, just plain Java and a couple of CSV files. Anyone with a JDK installed should be able to get it running in a few minutes.
 
-Requirements
-* Java 17 JDK or later
-* IntelliJ IDEA or Eclipse (optional)
-* Git (optional, if you are cloning the repository)
+---
 
-No external libraries are required to run the project.
+## What it does
 
-Project Structure
-The source code is located inside the src directory.
-The main class used to start the application is:
-edu.ccrm.cli.CCRMApplication
+- Load and manage student records (registration number, name, email)
+- Load and manage course data (code, title, credits, instructor, semester, department)
+- Sort students alphabetically by name
+- Sort courses by their course code
+- Handy array utilities — joining strings, slicing arrays, etc.
+- Calculate the total size of files under a directory recursively
+- CSV-based storage — data is stored in plain text files you can open in Excel
 
-Getting Started
+---
 
-Clone the repository and move into the project directory:
+## Technologies used
 
-git clone <repository-url>
-cd <project-folder>
+- **Java 17** — the whole project is written in standard Java, no frameworks
+- **Java NIO** (`java.nio.file`) — used in FileUtils for file operations
+- **Java Comparator API** — used for sorting students and courses
+- **CSV files** — for storing data (students.csv and courses.csv)
+- **IntelliJ IDEA** — what I used to write and test the code (Eclipse works too)
 
-Compiling the Project
+---
 
-Linux / macOS
+## Requirements
 
-From the repository root, run:
+- Java 17 JDK or later
+- IntelliJ IDEA or Eclipse (optional, but makes things easier)
+- Git (only if you're cloning the repo)
 
+No external libraries or Maven dependencies needed.
+
+---
+
+## Project Structure
+
+```
+JAVA-PROJECT_24BCY10110/
+├── ArrayOperations.java   # String array helpers (join, tail)
+├── Comparators.java       # Sorting comparators for Student and Course
+├── FileUtils.java         # Recursive file size calculator
+├── students.csv           # Sample student records
+├── courses.csv            # Sample course records
+├── statement.md           # Project problem statement and scope
+└── README.md              # This file
+```
+
+---
+
+## Getting Started
+
+Clone the repo:
+
+```
+git clone https://github.com/R-Uday-Charan/JAVA-PROJECT_24BCY10110.git
+cd JAVA-PROJECT_24BCY10110
+```
+
+---
+
+## Compiling
+
+**On Linux / macOS:**
+
+```bash
 mkdir -p out
 javac -d out $(find src -name "*.java")
+```
 
-The compiled files will be placed inside the out directory.
+**On Windows (PowerShell):**
 
-Windows PowerShell
-
-Run:
-
+```powershell
 mkdir out
 javac -d out (Get-ChildItem -Recurse -Filter *.java).FullName
+```
 
-If the out directory already exists, you can skip the mkdir command.
+If the `out` folder already exists, skip the `mkdir` step.
 
-#Running the Application
+---
 
-After compiling the project, run:
+## Running the Application
 
+After compiling:
+
+```
 java -cp out edu.ccrm.cli.CCRMApplication
+```
 
-The application creates a small amount of seed data when it starts, so there is some initial data available for testing.
+The app loads some seed data on startup so you don't have to manually add anything just to test it.
 
-#Data Storage
+---
 
-Application data is exported to:
+## How to test it
 
+The easiest way to check things are working:
+
+1. Compile the project using the steps above
+2. Run the application — it should start without any errors
+3. Check that the student and course data loads correctly from the CSV files
+4. Try sorting — students should come out alphabetically, courses by code
+5. Open `students.csv` or `courses.csv` in a text editor or Excel and add a new row, then re-run and see if it picks up the new data
+
+For `FileUtils`, you can point it at any directory on your machine and it'll give you the total size of all files inside it.
+
+---
+
+## Data Storage
+
+By default the app stores its data under:
+
+```
 ${user.home}/ccrm-data
+```
 
-The actual location depends on the user's home directory.
+To use a different folder, update the path in `AppConfig.get().storageFolder()`.
 
-If you want to use a different storage location, you can change the configuration in AppConfig.
+---
 
-The storage path is obtained using:
+## Troubleshooting
 
-AppConfig.get().storageFolder()
+If `java` or `javac` aren't recognized, your JDK might not be on the PATH. Check with:
 
-Change the relevant value in AppConfig to use another directory.
-
-#Seed Data
-
-CCRM creates minimal seed data during application startup. This is useful when running the project for the first time because you do not have to manually create all the required data before testing the application.
-
-#Running with an IDE
-
-The project can also be opened using IntelliJ IDEA or Eclipse.
-
-Make sure the project is configured to use Java 17 or a newer version.
-
-Run the following class as the main application:
-
-edu.ccrm.cli.CCRMApplication
-
-#Troubleshooting
-
-If the java or javac commands are not recognized, check that the JDK is installed correctly and that Java has been added to your system PATH.
-
-You can check the installed Java version with:
-
+```
 java -version
 javac -version
+```
 
-Both commands should show Java 17 or a newer version.
+Both should show Java 17 or newer. If not, add the JDK `bin` folder to your system PATH.
 
-If you get a class not found error while starting the application, make sure the project was compiled successfully and that you are running the command from the repository root:
+If you get a "class not found" error, double-check that:
+- The project compiled without errors
+- You're running the command from the repo root
+- The `out` folder exists and has `.class` files in it
 
-java -cp out edu.ccrm.cli.CCRMApplication
+---
 
-Also check that the out directory contains the compiled class files.
+## Notes
 
-#Configuration
+- No external libraries needed — just the standard JDK
+- Data lives in CSV files, so it's easy to inspect or edit manually
+- Seed data is loaded automatically, so the app isn't empty on first run
+- You can open the project in IntelliJ or Eclipse with Java 17 configured
 
-The project keeps its configuration simple. The default storage directory is configured through AppConfig.
+---
 
-To change the storage location, update:
+## License
 
-AppConfig.get().storageFolder()
-
-No additional configuration files are required.
-
-#Notes
-
-* Java 17 or later is required.
-* No external libraries are required.
-* The application uses the user's home directory for data storage by default.
-* Minimal seed data is created automatically at startup.
-* The project can be compiled directly using javac.
-* Maven is optional and is not required to build or run the project.
-
-#License
-
-Add the license information here if a license is added to the project.
+No license added yet. Will update this if needed.
