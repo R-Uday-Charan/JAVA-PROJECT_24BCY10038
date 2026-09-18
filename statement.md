@@ -50,3 +50,44 @@ Primarily for college staff or lab instructors who need a lightweight way to man
 ## Why I built it this way
 
 I kept the architecture simple on purpose. Everything is in plain Java with no external dependencies. The idea was that anyone with just a JDK installed should be able to compile and run this without any setup headaches. The CSV files also make it transparent — you can just open them in Excel or any text editor to check what's in there.
+
+---
+
+## Objectives
+
+The main thing I wanted to get out of this project was to actually apply what we covered in class — not just write code that compiles, but structure it in a way that makes sense.
+
+Specific goals:
+- Build a working domain model for students and courses using proper Java classes
+- Use the Comparator interface for sorting, since that was covered in the course
+- Keep data in flat files (CSV) and read them using Java's file I/O
+- Write utility methods that are reusable and not tied to one specific use case
+- Make the codebase something a classmate could pick up and understand without a lengthy explanation
+
+---
+
+## Functional Requirements
+
+1. The system should be able to load student records from a CSV file and map each row to a Student object
+2. It should also load course records the same way — each row becomes a Course object
+3. Students should be sortable by their full name (alphabetically)
+4. Courses should be sortable by their course code
+5. The system should handle edge cases in CSV data — blank rows, null fields, etc. — without crashing
+6. Array utility methods (join, tail) should work correctly on string arrays
+7. File size calculation should work recursively across nested directories
+
+---
+
+## Non-Functional Requirements
+
+**Simplicity** — the project should be runnable with just `javac` and `java`. No build tools, no extra setup. Someone should be able to clone it and run it in under 5 minutes.
+
+**Reliability** — if a CSV row is badly formatted or a file doesn't exist, the system shouldn't throw an unhandled exception and die. It should degrade gracefully and skip the bad data.
+
+**Maintainability** — each class has one clear job. Adding a new sort order or a new field to Student shouldn't require touching five different files.
+
+**Readability** — comments explain *why* something is done, not just *what* it does. Variable names are descriptive enough that you don't need to trace through the whole call chain to understand what's happening.
+
+**Portability** — works on any OS with a JDK 17+ installation. No OS-specific paths or dependencies baked in.
+
+**Minimal resource usage** — for the scale this operates at (a few hundred records), performance is not a concern, but the code avoids unnecessary object creation or redundant I/O operations anyway.
