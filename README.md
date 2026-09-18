@@ -43,13 +43,19 @@ No external libraries or Maven dependencies needed.
 
 ```
 JAVA-PROJECT_24BCY10110/
-├── ArrayOperations.java   # String array helpers (join, tail)
-├── Comparators.java       # Sorting comparators for Student and Course
-├── FileUtils.java         # Recursive file size calculator
-├── students.csv           # Sample student records
-├── courses.csv            # Sample course records
-├── statement.md           # Project problem statement and scope
-└── README.md              # This file
+├── edu/ccrm/domain/
+│   ├── Student.java        # Student model (regNo, name, email)
+│   ├── StudentName.java    # Name split into given + family parts
+│   ├── Course.java         # Course model (code, title, credits, etc.)
+│   └── CourseCode.java     # Course code as a typed value object
+├── ArrayOperations.java    # String array helpers (join, tail)
+├── Comparators.java        # Sorting comparators for Student and Course
+├── FileUtils.java          # Recursive file size calculator
+├── students.csv            # Sample student records
+├── courses.csv             # Sample course records
+├── diagrams.md             # Architecture, UML, workflow diagrams
+├── statement.md            # Project problem statement and scope
+└── README.md               # This file
 ```
 
 ---

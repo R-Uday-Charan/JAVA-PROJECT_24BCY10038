@@ -7,87 +7,92 @@
 
 ## Problem Statement
 
-Managing student records and course information in a college manually is a pain. Things get lost, data gets duplicated, and there's no clean way to search or sort anything. This project is basically my attempt at building a small tool that handles that — storing student and course data in CSV files, and giving a simple way to load, sort, and work with that data through Java code.
+So the idea came from something pretty common in college — keeping track of students and courses is kind of a mess when it's done manually. Records get mixed up, you can't easily search through them, and sorting by name or course code takes forever if you're doing it in a spreadsheet. I wanted to build something that at least handles the basics in a cleaner way using Java.
 
-It's not a full-blown system, but it covers the core operations that would actually be useful in a real campus setting.
+The project stores student and course data in CSV files and provides a way to load, sort and work with that data programmatically. It's not a big enterprise system or anything like that — it's more of a practical utility that actually works.
 
 ---
 
 ## Scope
 
-This project focuses on:
+What this project does:
 
-- Reading and managing student records from a CSV file
-- Reading and managing course data from a CSV file  
-- Sorting students (by name) and courses (by course code)
-- Utility operations on arrays and file paths
-- Keeping things simple — no databases, no external libraries, just plain Java
+- loads student records from a CSV and maps them to Java objects
+- same for courses — each row becomes a Course object with all its fields
+- you can sort students by name or courses by code
+- there are a couple of array helper methods (join, tail) that I ended up needing while building this
+- and a recursive file size calculator under FileUtils
 
-What it does **not** cover (at least for now):
-- A full GUI or web interface
-- Enrollment logic (linking students to specific courses)
-- Authentication or user roles
+What I didn't try to do:
+- no GUI, everything runs through code/CLI
+- didn't build enrollment logic (i.e. linking a student to specific courses) — that felt out of scope for now
+- no login or auth of any kind
 
 ---
 
 ## Target Users
 
-Primarily for college staff or lab instructors who need a lightweight way to manage and look up student and course records without setting up a heavy database system. Could also just be useful for academic demonstration purposes.
+Mostly college staff — like a lab coordinator or an admin who just needs to load a list of students and sort through it without opening Excel. Could also work as a base for a bigger system if someone wanted to extend it. For now it's pretty self-contained.
 
 ---
 
 ## Features
 
-- **Student record management** — load and store student data with fields like registration number, name, and email
-- **Course record management** — load course data including course code, title, credits, instructor, semester, and department
-- **Sorting** — sort students by name, sort courses by their course code
-- **Array helpers** — small utility methods like `join` and `tail` that make working with string arrays easier
-- **File size utility** — recursively calculate total size of files under a folder (useful for checking data directory size)
-- **CSV-based storage** — data lives in plain `.csv` files, easy to open and edit manually if needed
+- load and display student records (reg number, name, email)
+- load and display course data (code, title, credits, instructor, semester, department)
+- sort students alphabetically by full name
+- sort courses by their course code
+- join and slice string arrays with utility methods
+- calculate total size of all files in a directory recursively
+- data is stored in plain CSV so it's easy to inspect or modify
 
 ---
 
 ## Why I built it this way
 
-I kept the architecture simple on purpose. Everything is in plain Java with no external dependencies. The idea was that anyone with just a JDK installed should be able to compile and run this without any setup headaches. The CSV files also make it transparent — you can just open them in Excel or any text editor to check what's in there.
+Honestly the main reason I went with plain Java and CSV files is to keep it simple. I didn't want to pull in Maven or some external library for something this small. Anyone with a JDK should be able to compile and run it — that felt important.
+
+I also split things into separate classes (Student, Course, CourseCode, StudentName, Comparators, etc.) because it's easier to read and change later. If I need to add a new field to Student I just change Student.java, not five different places.
 
 ---
 
 ## Objectives
 
-The main thing I wanted to get out of this project was to actually apply what we covered in class — not just write code that compiles, but structure it in a way that makes sense.
+What I was trying to get done with this:
 
-Specific goals:
-- Build a working domain model for students and courses using proper Java classes
-- Use the Comparator interface for sorting, since that was covered in the course
-- Keep data in flat files (CSV) and read them using Java's file I/O
-- Write utility methods that are reusable and not tied to one specific use case
-- Make the codebase something a classmate could pick up and understand without a lengthy explanation
+- actually apply the Comparator interface from the course, not just read about it
+- build proper domain classes rather than passing raw strings around everywhere
+- practice using Java's file I/O (NIO) for reading files
+- write utility methods that aren't tied to one specific use case — something reusable
+- keep the whole thing clean enough that someone else could read through it without needing me to explain everything
+
+I'll be honest, the domain model part took me a bit longer than expected. Getting StudentName to work with Comparators correctly needed a few iterations.
 
 ---
 
 ## Functional Requirements
 
-1. The system should be able to load student records from a CSV file and map each row to a Student object
-2. It should also load course records the same way — each row becomes a Course object
-3. Students should be sortable by their full name (alphabetically)
-4. Courses should be sortable by their course code
-5. The system should handle edge cases in CSV data — blank rows, null fields, etc. — without crashing
-6. Array utility methods (join, tail) should work correctly on string arrays
-7. File size calculation should work recursively across nested directories
+1. Load student records from students.csv and convert each row into a Student object with the appropriate fields
+2. Load course records from courses.csv similarly — each row becomes a Course
+3. Sort a list of students by their full name (given + family) in ascending order
+4. Sort a list of courses by course code alphabetically
+5. When the CSV has bad rows (empty fields, null values, etc.) the system should skip them rather than crash
+6. join() should combine a string array into a single string using a given separator
+7. tail() should return the array without its first element — useful for skipping CSV headers
+8. sizeRecursive() should walk through a directory and add up the sizes of all files inside, including nested folders
 
 ---
 
 ## Non-Functional Requirements
 
-**Simplicity** — the project should be runnable with just `javac` and `java`. No build tools, no extra setup. Someone should be able to clone it and run it in under 5 minutes.
+**It has to be runnable without any special setup.** Just javac and java. No build system, no config files to fill in. The whole point is that it should work out of the box on any machine with a JDK.
 
-**Reliability** — if a CSV row is badly formatted or a file doesn't exist, the system shouldn't throw an unhandled exception and die. It should degrade gracefully and skip the bad data.
+**Error handling matters.** If a file doesn't exist or a row in the CSV is missing a field, the code shouldn't just throw an exception and stop. FileUtils already handles the case where the path doesn't exist — similar thinking applies throughout.
 
-**Maintainability** — each class has one clear job. Adding a new sort order or a new field to Student shouldn't require touching five different files.
+**Each class should have one job.** I tried to follow this reasonably well. Comparators only does sorting. FileUtils only does file stuff. If the scope of a class starts creeping, it becomes harder to maintain — learned that from experience.
 
-**Readability** — comments explain *why* something is done, not just *what* it does. Variable names are descriptive enough that you don't need to trace through the whole call chain to understand what's happening.
+**Readable over clever.** I wrote the Comparator in ArrayOperations as an anonymous class on purpose even though a lambda would be shorter, just because it's clearer to read. Comments in the code try to explain the reasoning, not just restate what the line does.
 
-**Portability** — works on any OS with a JDK 17+ installation. No OS-specific paths or dependencies baked in.
+**Works cross-platform.** No hardcoded Windows paths or OS-specific calls. Uses java.nio.file.Path which handles path differences automatically.
 
-**Minimal resource usage** — for the scale this operates at (a few hundred records), performance is not a concern, but the code avoids unnecessary object creation or redundant I/O operations anyway.
+**Efficient enough for the use case.** This isn't handling millions of records. For a typical college department with a few hundred students it's fast. I didn't over-optimize, but I also didn't do anything obviously wasteful.
